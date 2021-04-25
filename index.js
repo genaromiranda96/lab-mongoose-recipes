@@ -40,8 +40,29 @@ mongoose
     duration: 40,
     creator: "Chef LePapu"
     })
-    .then((result)=>{
-      return console.log(result.title)
+    // .then((result)=>{
+    //   return console.log(result.title)
+    // })
+  })
+  .then((newRecipe) => {
+    return Recipe.insertMany(data)
+    .then((allRecipes) => {
+      allRecipes.forEach((element) => {
+        console.log('New recipe created:', element.title)
+      });
+    })
+  })
+  .then((allRecipes) => {
+     return Recipe.findOneAndUpdate({title: "Rigattoni alla Genovese"}, {$set:{duration:100}}, {new: true})
+     .then(() => {
+       console.log('Recipe modificated')
+     })
+  })
+  .then(() => {
+    Recipe.deleteOne({title: 'Carrot Cake'})
+    .then(() => {
+      console.log('The recipe was eliminited')
+      mongoose.connection.close()
     })
   })
   .catch(error => {
